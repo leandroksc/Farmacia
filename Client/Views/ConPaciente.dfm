@@ -14,6 +14,7 @@ object FrmConPaciente: TFrmConPaciente
   Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -29,7 +30,7 @@ object FrmConPaciente: TFrmConPaciente
       Top = 41
       Width = 877
       Height = 438
-      TabOrder = 2
+      TabOrder = 3
       object GridPacientesDBTableView1: TcxGridDBTableView
         OnDblClick = GridPacientesDBTableView1DblClick
         Navigator.Buttons.CustomButtons = <>
@@ -64,7 +65,7 @@ object FrmConPaciente: TFrmConPaciente
       Style.TransparentBorder = False
       TabOrder = 1
       OnKeyDown = EdtConsultaKeyDown
-      Width = 697
+      Width = 616
     end
     object cxButton1: TcxButton
       Left = 10
@@ -74,6 +75,15 @@ object FrmConPaciente: TFrmConPaciente
       Caption = 'Novo Paciente'
       TabOrder = 0
       OnClick = cxButton1Click
+    end
+    object BtnBuscar: TcxButton
+      Left = 812
+      Top = 10
+      Width = 75
+      Height = 25
+      Caption = 'Buscar'
+      TabOrder = 2
+      OnClick = BtnBuscarClick
     end
     object dxLayoutControl1Group_Root: TdxLayoutGroup
       AlignHorz = ahClient
@@ -117,6 +127,15 @@ object FrmConPaciente: TFrmConPaciente
       Parent = dxLayoutControl1Group_Root
       LayoutDirection = ldHorizontal
       Index = 0
+    end
+    object dxLayoutItem4: TdxLayoutItem
+      Parent = dxLayoutAutoCreatedGroup1
+      CaptionOptions.Visible = False
+      Control = BtnBuscar
+      ControlOptions.OriginalHeight = 25
+      ControlOptions.OriginalWidth = 75
+      ControlOptions.ShowBorder = False
+      Index = 2
     end
   end
   object DSMemPacientes: TDataSource

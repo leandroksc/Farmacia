@@ -7,20 +7,19 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Menus, System.Actions, Vcl.ActnList;
 
 type
-  TForm1 = class(TForm)
+  TFrmPrincipal = class(TForm)
     MainMenu1: TMainMenu;
     ActionList1: TActionList;
     ActPaciente: TAction;
     Cadastros1: TMenuItem;
     Action11: TMenuItem;
-    ActUpdateDatabase: TAction;
-    Database1: TMenuItem;
-    UpdateDatabase1: TMenuItem;
     ActServico: TAction;
     Servio1: TMenuItem;
+    ActFarmaceutico: TAction;
+    Farmacutico1: TMenuItem;
     procedure ActPacienteExecute(Sender: TObject);
-    procedure ActUpdateDatabaseExecute(Sender: TObject);
     procedure ActServicoExecute(Sender: TObject);
+    procedure ActFarmaceuticoExecute(Sender: TObject);
   private
     { Private declarations }
   public
@@ -28,28 +27,28 @@ type
   end;
 
 var
-  Form1: TForm1;
+  FrmPrincipal: TFrmPrincipal;
 
 implementation
 
 {$R *.dfm}
 
 uses
-  CadPaciente, ConPaciente, uServerContext, ConServico, CadServico;
+  ConPaciente, uServerContext, ConServico, ConFarmaceutico;
 
-procedure TForm1.ActPacienteExecute(Sender: TObject);
+procedure TFrmPrincipal.ActFarmaceuticoExecute(Sender: TObject);
+begin
+  TFrmConFarmaceutico.Create(nil).Show;
+end;
+
+procedure TFrmPrincipal.ActPacienteExecute(Sender: TObject);
 begin
   TFrmConPaciente.Create(nil).Show;
 end;
 
-procedure TForm1.ActServicoExecute(Sender: TObject);
+procedure TFrmPrincipal.ActServicoExecute(Sender: TObject);
 begin
   TFrmConServico.Create(nil).Show;
-end;
-
-procedure TForm1.ActUpdateDatabaseExecute(Sender: TObject);
-begin
-  TServerContext.GetInstance.UpdateDataBase;
 end;
 
 end.

@@ -2,10 +2,11 @@ program Server;
 
 uses
   Vcl.Forms,
-  Unit1 in 'Unit1.pas' {ServerContainer: TDataModule},
-  Unit2 in 'Unit2.pas' {MainForm},
+  uDMServerContainer in 'uDMServerContainer.pas' {ServerContainer: TDataModule},
+  Principal in 'Principal.pas' {MainForm},
   uEntities in '..\Common\uEntities.pas',
-  uEnums in '..\Common\uEnums.pas';
+  uEnums in '..\Common\uEnums.pas',
+  uInterfaces in '..\Common\uInterfaces.pas';
 
 {$R *.res}
 

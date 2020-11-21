@@ -1,7 +1,7 @@
-object FrmConServico: TFrmConServico
+object FrmConFarmaceutico: TFrmConFarmaceutico
   Left = 0
   Top = 0
-  Caption = 'Servi'#231'os'
+  Caption = 'Farmac'#234'uticos'
   ClientHeight = 489
   ClientWidth = 897
   Color = clBtnFace
@@ -25,17 +25,17 @@ object FrmConServico: TFrmConServico
     Height = 489
     Align = alClient
     TabOrder = 0
-    object GridPacientes: TcxGrid
+    object GridFarmaceuticos: TcxGrid
       Left = 10
       Top = 41
       Width = 877
       Height = 438
       TabOrder = 3
-      object GridPacientesDBTableView1: TcxGridDBTableView
-        OnDblClick = GridPacientesDBTableView1DblClick
+      object GridFarmaceuticosDBTableView1: TcxGridDBTableView
+        OnDblClick = GridFarmaceuticosDBTableView1DblClick
         Navigator.Buttons.CustomButtons = <>
         ScrollbarAnnotations.CustomAnnotations = <>
-        DataController.DataSource = DSServicos
+        DataController.DataSource = DSFarmaceuticos
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
@@ -44,22 +44,16 @@ object FrmConServico: TFrmConServico
         OptionsData.Editing = False
         OptionsData.Inserting = False
         OptionsView.GroupByBox = False
-        object GridPacientesDBTableView1ID: TcxGridDBColumn
+        object GridFarmaceuticosDBTableView1ID: TcxGridDBColumn
           DataBinding.FieldName = 'ID'
         end
-        object GridPacientesDBTableView1Nome: TcxGridDBColumn
-          Caption = 'Paciente'
-          DataBinding.FieldName = 'Paciente.Nome'
+        object GridFarmaceuticosDBTableView1Nome: TcxGridDBColumn
+          DataBinding.FieldName = 'Nome'
           Width = 350
         end
-        object GridPacientesDBTableView1FarmaceuticoNome: TcxGridDBColumn
-          Caption = 'Farmac'#234'utico'
-          DataBinding.FieldName = 'Farmaceutico.Nome'
-          Width = 221
-        end
       end
-      object GridPacientesLevel1: TcxGridLevel
-        GridView = GridPacientesDBTableView1
+      object GridFarmaceuticosLevel1: TcxGridLevel
+        GridView = GridFarmaceuticosDBTableView1
       end
     end
     object EdtConsulta: TcxTextEdit
@@ -78,7 +72,7 @@ object FrmConServico: TFrmConServico
       Top = 10
       Width = 127
       Height = 25
-      Caption = 'Novo Servi'#231'o'
+      Caption = 'Novo Farmac'#234'utico'
       TabOrder = 0
       OnClick = cxButton1Click
     end
@@ -102,7 +96,7 @@ object FrmConServico: TFrmConServico
     object dxLayoutItem1: TdxLayoutItem
       Parent = dxLayoutControl1Group_Root
       AlignVert = avClient
-      Control = GridPacientes
+      Control = GridFarmaceuticos
       ControlOptions.OriginalHeight = 200
       ControlOptions.OriginalWidth = 250
       ControlOptions.ShowBorder = False
@@ -136,7 +130,6 @@ object FrmConServico: TFrmConServico
     end
     object dxLayoutItem4: TdxLayoutItem
       Parent = dxLayoutAutoCreatedGroup1
-      CaptionOptions.Text = 'cxButton2'
       CaptionOptions.Visible = False
       Control = BtnBuscar
       ControlOptions.OriginalHeight = 25
@@ -145,25 +138,14 @@ object FrmConServico: TFrmConServico
       Index = 2
     end
   end
-  object DSServicos: TDataSource
-    DataSet = ADSServicos
+  object DSFarmaceuticos: TDataSource
+    DataSet = ADSFarmaceuticos
     Left = 440
     Top = 184
   end
-  object ADSServicos: TAureliusDataset
+  object ADSFarmaceuticos: TAureliusDataset
     FieldDefs = <>
     Left = 480
     Top = 264
-    object ADSServicosPacienteNome: TStringField
-      FieldName = 'Paciente.Nome'
-      Size = 255
-    end
-    object ADSServicosID: TIntegerField
-      FieldName = 'ID'
-    end
-    object ADSServicosFarmaceuticoNome: TStringField
-      FieldName = 'Farmaceutico.Nome'
-      Size = 255
-    end
   end
 end

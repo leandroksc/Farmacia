@@ -1,4 +1,4 @@
-object Form1: TForm1
+object FrmPrincipal: TFrmPrincipal
   Left = 0
   Top = 0
   Caption = 'Servi'#231'os Farmac'#234'uticos'
@@ -23,14 +23,11 @@ object Form1: TForm1
       object Action11: TMenuItem
         Action = ActPaciente
       end
+      object Farmacutico1: TMenuItem
+        Action = ActFarmaceutico
+      end
       object Servio1: TMenuItem
         Action = ActServico
-      end
-    end
-    object Database1: TMenuItem
-      Caption = 'Database'
-      object UpdateDatabase1: TMenuItem
-        Action = ActUpdateDatabase
       end
     end
   end
@@ -41,13 +38,13 @@ object Form1: TForm1
       Caption = 'Paciente'
       OnExecute = ActPacienteExecute
     end
-    object ActUpdateDatabase: TAction
-      Caption = 'Update Database'
-      OnExecute = ActUpdateDatabaseExecute
-    end
     object ActServico: TAction
       Caption = 'Servi'#231'o'
       OnExecute = ActServicoExecute
+    end
+    object ActFarmaceutico: TAction
+      Caption = 'Farmac'#234'utico'
+      OnExecute = ActFarmaceuticoExecute
     end
   end
 end

@@ -3,17 +3,16 @@ unit CadServico;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxClasses,
-  dxLayoutContainer, dxLayoutControl, dxLayoutcxEditAdapters, cxContainer, cxEdit, cxTextEdit, dxLayoutControlAdapters,
-  Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, Aurelius.Engine.ObjectManager, uServicoController,
-  Vcl.ComCtrls, dxCore, cxDateUtils, cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage, cxNavigator, dxDateRanges,
-  dxScrollbarAnnotations, Data.DB, cxDBData, cxGridLevel, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGrid, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, cxMaskEdit, cxCalendar,
-  cxMemo, uPessoaController, Generics.Collections, Aurelius.Bind.BaseDataset, Aurelius.Bind.Dataset,
-  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
-  FireDAC.DApt.Intf, FireDAC.Comp.DataSet, FireDAC.Comp.Client, cxCurrencyEdit, uEntities,
-  Aurelius.Types.Nullable;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls,
+  Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxClasses, dxLayoutContainer, dxLayoutControl, cxContainer, cxEdit,
+  cxTextEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, uServicoController, Vcl.ComCtrls, Data.DB, cxGridLevel,
+  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxDropDownEdit, cxLookupEdit,
+  cxDBLookupEdit, cxDBLookupComboBox, cxMaskEdit, cxCalendar, cxMemo, uPacienteController, Generics.Collections,
+  Aurelius.Bind.BaseDataset, Aurelius.Bind.Dataset, FireDAC.Comp.DataSet, FireDAC.Comp.Client, uEntities,
+  Aurelius.Types.Nullable, uFarmaceuticoController, cxLookAndFeels, cxLookAndFeelPainters, dxCore, cxDateUtils,
+  cxStyles, cxCustomData, cxFilter, cxData, cxDataStorage, cxNavigator, dxDateRanges, dxScrollbarAnnotations, cxDBData,
+  cxCurrencyEdit, dxLayoutcxEditAdapters, dxLayoutControlAdapters, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf;
 
 type
   TFrmCadServico = class(TForm)
@@ -60,25 +59,33 @@ type
     DSMemProcedimentoTipos: TDataSource;
     MemProcedimentoTiposID: TIntegerField;
     MemProcedimentoTiposDescricao: TStringField;
-    MemProcedimentos: TFDMemTable;
-    MemProcedimentosID: TIntegerField;
-    MemProcedimentosDescricao: TStringField;
-    MemProcedimentosTipo: TIntegerField;
-    MemProcedimentosValor: TCurrencyField;
-    MemPacientes: TFDMemTable;
+    ADSProcedimentos: TAureliusDataset;
+    dxLayoutItem9: TdxLayoutItem;
+    BtnExcluirProcedimento: TcxButton;
+    dxLayoutAutoCreatedGroup3: TdxLayoutAutoCreatedGroup;
+    dxLayoutItem10: TdxLayoutItem;
+    BtnExcluir: TcxButton;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BtnCancelarClick(Sender: TObject);
     procedure BtnSalvarClick(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure BtnNovoProcedimentoClick(Sender: TObject);
+    procedure BtnExcluirProcedimentoClick(Sender: TObject);
+    procedure BtnExcluirClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure ADSProcedimentosAfterPost(DataSet: TDataSet);
+    procedure ADSProcedimentosAfterDelete(DataSet: TDataSet);
   private
     FController: TServicoController;
-    FPacienteController: TPessoaController;
-    FManager: TObjectManager;
+    FPacienteController: TPacienteController;
+    FFarmaceuticoController: TFarmaceuticoController;
+    FPacientes: TList<TPaciente>;
+    FFarmaceuticos: TList<TFarmaceutico>;
+    FOwnsObject: Boolean;
     procedure Salvar;
     procedure LoadData;
+    procedure UpdateTotal;
   protected
     FServico: TServico;
   public
@@ -107,14 +114,35 @@ begin
   Abrir(nil);
 end;
 
+procedure TFrmCadServico.ADSProcedimentosAfterDelete(DataSet: TDataSet);
+begin
+  UpdateTotal;
+end;
+
+procedure TFrmCadServico.ADSProcedimentosAfterPost(DataSet: TDataSet);
+begin
+  UpdateTotal;
+end;
+
 procedure TFrmCadServico.BtnCancelarClick(Sender: TObject);
 begin
   Close;
 end;
 
+procedure TFrmCadServico.BtnExcluirClick(Sender: TObject);
+begin
+  FController.Excluir(FServico);
+  Close;
+end;
+
+procedure TFrmCadServico.BtnExcluirProcedimentoClick(Sender: TObject);
+begin
+  ADSProcedimentos.Delete;
+end;
+
 procedure TFrmCadServico.BtnNovoProcedimentoClick(Sender: TObject);
 begin
-  MemProcedimentos.Append;
+  ADSProcedimentos.Append;
 end;
 
 procedure TFrmCadServico.BtnSalvarClick(Sender: TObject);
@@ -130,110 +158,89 @@ end;
 
 procedure TFrmCadServico.FormCreate(Sender: TObject);
 begin
-//  FManager := TObjectManager.Create;
   FController := TServicoController.Create;
-  FPacienteController := TPessoaController.Create;
+  FPacienteController := TPacienteController.Create;
+  FFarmaceuticoController := TFarmaceuticoController.Create;
 end;
 
 procedure TFrmCadServico.FormDestroy(Sender: TObject);
 begin
-//  FManager.Free;
+  if FOwnsObject then
+    FServico.Free;
+  FFarmaceuticoController.Free;
+  FPacienteController.Free;
+  FController.Free;
+  FPacientes.Free;
+  FFarmaceuticos.Free;
 end;
 
 procedure TFrmCadServico.FormShow(Sender: TObject);
 begin
   LoadData;
+  BtnExcluir.Enabled := FServico.ID <> 0;
 end;
 
 procedure TFrmCadServico.LoadData;
-var
-  ATipo: TProcedimentoTipo;
-  AProcedimento: TProcedimento;
-  APessoas: TList<TPessoa>;
 begin
-  APessoas := FPacienteController.ListarTodos;
-  try
-//    ADSPacientes.Manager := FManager;
-    ADSPacientes.SetSourceList(APessoas);
-    ADSPacientes.Open;
-  finally
-//    APessoas.Free;
+  if FServico = nil then
+  begin
+    FServico := TServico.Create;
+    FOwnsObject := True;
   end;
-
-  {APessoas := FPacienteController.ListarTodos;
-  try
-    ADSFarmaceuticos.SetSourceList(APacientes);
-    ADSFarmaceuticos.Open;
-  finally
-    APessoas.Free;
-  end; }
-
-
-
-  MemProcedimentos.Open;
 
   MemProcedimentoTipos.Open;
-  for ATipo := Low(TProcedimentoTipo) to High(TProcedimentoTipo) do
-  begin
-    MemProcedimentoTipos.Append;
-    MemProcedimentoTiposID.AsInteger       := Integer(ATipo);
-    MemProcedimentoTiposDescricao.AsString := ATipo.ToDescricao;
-    MemProcedimentoTipos.Post;
-  end;
+  TProcedimentoTipo.PreencheDataSet(MemProcedimentoTipos);
 
-  if FServico <> nil then
-  begin
-    EdtID.Text   := FServico.ID.ToString;
+  FPacientes := FPacienteController.Buscar('');
+  ADSPacientes.SetSourceList(FPacientes);
+  ADSPacientes.Open;
+
+  FFarmaceuticos := FFarmaceuticoController.Buscar('');
+  ADSFarmaceuticos.SetSourceList(FFarmaceuticos);
+  ADSFarmaceuticos.Open;
+
+  if FServico.ID <> 0 then
+    EdtID.Text := FServico.ID.ToString;
+  if FServico.Data <> 0 then
     EdtData.Date := FServico.Data;
-    if FServico.Paciente <> nil then
-      LcbPaciente.EditValue := FServico.Paciente.Id;
-    if FServico.Farmaceutico <> nil then
-      LcbFarmaceutico.EditValue := FServico.Farmaceutico.Id;
-    MemoObservacao.Lines.Text := FServico.Observacao.ValueOrDefault;
+  if FServico.Paciente <> nil then
+    LcbPaciente.EditValue := FServico.Paciente.Id;
+  if FServico.Farmaceutico <> nil then
+    LcbFarmaceutico.EditValue := FServico.Farmaceutico.Id;
+  MemoObservacao.Lines.Text := FServico.Observacao.ValueOrDefault;
 
-    for AProcedimento in FServico.Procedimentos do
-    begin
-      MemProcedimentos.Append;
-      MemProcedimentosID.AsInteger       := AProcedimento.ID;
-      MemProcedimentosDescricao.AsString := AProcedimento.Descricao;
-      MemProcedimentosTipo.AsInteger     := Integer(AProcedimento.Tipo);
-      MemProcedimentosValor.AsCurrency   := AProcedimento.Valor;
-      MemProcedimentos.Post;
-    end;
-  end;
+  ADSProcedimentos.SetSourceList(FServico.Procedimentos);
+  ADSProcedimentos.Open;
+  UpdateTotal;
 end;
 
 procedure TFrmCadServico.Salvar;
-var
-  AProcedimento: TProcedimento;
 begin
-  if FServico = nil then
-    FServico := TServico.Create;
+  if ADSProcedimentos.State in dsEditModes then
+    ADSProcedimentos.Post;
+
   FServico.Data         := EdtData.Date;
-  FServico.Farmaceutico := ADSFarmaceuticos.Current<TPessoa>;
-
-//  FServico.Paciente := TPessoa.Create;
-//  FServico.Paciente_Id := LcbPaciente.EditValue;
-
-  FServico.Paciente     := ADSPacientes.Current<TPessoa>;
+  FServico.Farmaceutico := ADSFarmaceuticos.Current<TFarmaceutico>;
+  FServico.Paciente     := ADSPacientes.Current<TPaciente>;
   if MemoObservacao.Lines.Count > 0 then
     FServico.Observacao := MemoObservacao.Lines.Text
   else
     FServico.Observacao := SNull;
 
-  MemProcedimentos.First;
-  while not MemProcedimentos.Eof do
-  begin
-    AProcedimento := TProcedimento.Create;
-    AProcedimento.Descricao := MemProcedimentosDescricao.AsString;
-    AProcedimento.Tipo      := TProcedimentoTipo(MemProcedimentosTipo.AsInteger);
-    AProcedimento.Valor     := MemProcedimentosValor.AsFloat;
-    FServico.Procedimentos.Add(AProcedimento);
-
-    MemProcedimentos.Next;
+  try
+    FController.Salvar(FServico);
+  except
+    on E:Exception do
+    begin
+      ShowMessage(E.Message);
+      Abort;
+    end;
   end;
+end;
 
-  FController.Salvar(FServico);
+procedure TFrmCadServico.UpdateTotal;
+begin
+  LblTotal.Caption := FormatFloat('R$ 0.00', FServico.Total);
 end;
 
 end.

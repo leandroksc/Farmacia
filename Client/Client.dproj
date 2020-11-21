@@ -92,15 +92,14 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="Principal.pas">
-            <Form>Form1</Form>
+            <Form>FrmPrincipal</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Views\CadPaciente.pas">
             <Form>FrmCadPaciente</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Controllers\uPessoaController.pas"/>
-        <DCCReference Include="Controllers\uInterfaces.pas"/>
+        <DCCReference Include="Controllers\uPacienteController.pas"/>
         <DCCReference Include="uServerContext.pas">
             <Form>ServerContext</Form>
             <FormType>dfm</FormType>
@@ -122,6 +121,16 @@
         <DCCReference Include="Controllers\uServicoController.pas"/>
         <DCCReference Include="..\Common\uEntities.pas"/>
         <DCCReference Include="..\Common\uEnums.pas"/>
+        <DCCReference Include="Controllers\uFarmaceuticoController.pas"/>
+        <DCCReference Include="..\Common\uInterfaces.pas"/>
+        <DCCReference Include="Views\CadFarmaceutico.pas">
+            <Form>FrmCadFarmaceutico</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Views\ConFarmaceutico.pas">
+            <Form>FrmConFarmaceutico</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

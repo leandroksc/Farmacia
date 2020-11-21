@@ -90,17 +90,18 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
-        <DCCReference Include="Unit1.pas">
+        <DCCReference Include="uDMServerContainer.pas">
             <Form>ServerContainer</Form>
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="Unit2.pas">
+        <DCCReference Include="Principal.pas">
             <Form>MainForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\Common\uEntities.pas"/>
         <DCCReference Include="..\Common\uEnums.pas"/>
+        <DCCReference Include="..\Common\uInterfaces.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

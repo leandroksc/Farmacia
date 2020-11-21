@@ -3,15 +3,13 @@ unit ConServico;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
-  cxClasses, dxLayoutContainer, dxLayoutControl, cxStyles, cxCustomData, cxFilter, cxData,
-  cxDataStorage, cxEdit, cxNavigator, dxDateRanges, dxScrollbarAnnotations, Data.DB, cxDBData, cxGridLevel,
-  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, dxLayoutcxEditAdapters,
-  dxLayoutControlAdapters, cxContainer, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxTextEdit, uPessoaController,
-  Generics.Collections, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error,
-  FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  Aurelius.Bind.BaseDataset, Aurelius.Bind.Dataset, uServicoController, uEntities;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls,
+  Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxClasses, dxLayoutContainer, dxLayoutControl, cxEdit, Data.DB,
+  cxGridLevel, cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxContainer,
+  Vcl.Menus, Vcl.StdCtrls, cxButtons, cxTextEdit, Generics.Collections, Aurelius.Bind.BaseDataset, Aurelius.Bind.Dataset,
+  uServicoController, uEntities, cxLookAndFeels,cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
+  cxDataStorage, cxNavigator, dxDateRanges,dxScrollbarAnnotations, cxDBData, dxLayoutcxEditAdapters,
+  dxLayoutControlAdapters;
 
 type
   TFrmConServico = class(TForm)
@@ -34,18 +32,21 @@ type
     ADSServicosID: TIntegerField;
     ADSServicosFarmaceuticoNome: TStringField;
     GridPacientesDBTableView1FarmaceuticoNome: TcxGridDBColumn;
+    BtnBuscar: TcxButton;
+    dxLayoutItem4: TdxLayoutItem;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure EdtConsultaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure GridPacientesDBTableView1DblClick(Sender: TObject);
     procedure cxButton1Click(Sender: TObject);
+    procedure BtnBuscarClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
-    { Private declarations }
     FController: TServicoController;
+    FLista: TList<TServico>;
     procedure UpdateView;
   public
-    { Public declarations }
   end;
 
 implementation
@@ -54,6 +55,11 @@ implementation
 
 uses
   CadServico;
+
+procedure TFrmConServico.BtnBuscarClick(Sender: TObject);
+begin
+  UpdateView;
+end;
 
 procedure TFrmConServico.cxButton1Click(Sender: TObject);
 begin
@@ -76,6 +82,12 @@ begin
   FController := TServicoController.Create;
 end;
 
+procedure TFrmConServico.FormDestroy(Sender: TObject);
+begin
+  FLista.Free;
+  FController.Free;
+end;
+
 procedure TFrmConServico.FormShow(Sender: TObject);
 begin
   UpdateView;
@@ -88,8 +100,10 @@ end;
 
 procedure TFrmConServico.UpdateView;
 begin
+  FreeAndNil(FLista);
+  FLista := FController.Buscar(EdtConsulta.Text);
   ADSServicos.Close;
-  ADSServicos.SetSourceList(FController.ListarTodos {Buscar(EdtConsulta.Text)});
+  ADSServicos.SetSourceList(FLista);
   ADSServicos.Open;
 end;
 

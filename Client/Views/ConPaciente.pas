@@ -3,15 +3,13 @@ unit ConPaciente;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters,
-  cxClasses, dxLayoutContainer, dxLayoutControl, cxStyles, cxCustomData, cxFilter, cxData,
-  cxDataStorage, cxEdit, cxNavigator, dxDateRanges, dxScrollbarAnnotations, Data.DB, cxDBData, cxGridLevel,
-  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, dxLayoutcxEditAdapters,
-  dxLayoutControlAdapters, cxContainer, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxTextEdit, uPessoaController,
-  uEntities, Generics.Collections, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error,
-  FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  Aurelius.Bind.BaseDataset, Aurelius.Bind.Dataset;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls,
+  Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxClasses, dxLayoutContainer, dxLayoutControl, Data.DB, cxGridLevel,
+  cxGridDBTableView, cxGrid, Vcl.Menus, cxButtons, cxTextEdit, uPacienteController, uEntities, Generics.Collections,
+  Aurelius.Bind.BaseDataset, Aurelius.Bind.Dataset, cxLookAndFeels, cxLookAndFeelPainters, cxStyles, cxCustomData,
+  cxFilter, cxData, cxDataStorage, cxEdit, cxNavigator, dxDateRanges, dxScrollbarAnnotations, cxDBData, cxContainer,
+  dxLayoutcxEditAdapters, dxLayoutControlAdapters, Vcl.StdCtrls, cxGridCustomTableView, cxGridTableView,
+  cxGridCustomView;
 
 type
   TFrmConPaciente = class(TForm)
@@ -30,15 +28,19 @@ type
     GridPacientesDBTableView1ID: TcxGridDBColumn;
     GridPacientesDBTableView1Nome: TcxGridDBColumn;
     ADSPacientes: TAureliusDataset;
+    dxLayoutItem4: TdxLayoutItem;
+    BtnBuscar: TcxButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure EdtConsultaKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure GridPacientesDBTableView1DblClick(Sender: TObject);
     procedure cxButton1Click(Sender: TObject);
+    procedure BtnBuscarClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
-    { Private declarations }
-    FController: TPessoaController;
+    FController: TPacienteController;
+    FLista: TList<TPaciente>;
     procedure UpdateView;
   public
     { Public declarations }
@@ -50,6 +52,11 @@ implementation
 
 uses
   CadPaciente;
+
+procedure TFrmConPaciente.BtnBuscarClick(Sender: TObject);
+begin
+  UpdateView;
+end;
 
 procedure TFrmConPaciente.cxButton1Click(Sender: TObject);
 begin
@@ -69,7 +76,13 @@ end;
 
 procedure TFrmConPaciente.FormCreate(Sender: TObject);
 begin
-  FController := TPessoaController.Create;
+  FController := TPacienteController.Create;
+end;
+
+procedure TFrmConPaciente.FormDestroy(Sender: TObject);
+begin
+  FController.Free;
+  FLista.Free;
 end;
 
 procedure TFrmConPaciente.FormShow(Sender: TObject);
@@ -79,13 +92,15 @@ end;
 
 procedure TFrmConPaciente.GridPacientesDBTableView1DblClick(Sender: TObject);
 begin
-  TFrmCadPaciente.Abrir(ADSPacientes.Current<TPessoa>);
+  TFrmCadPaciente.Abrir(ADSPacientes.Current<TPaciente>);
 end;
 
 procedure TFrmConPaciente.UpdateView;
 begin
+  FreeAndNil(FLista);
+  FLista := FController.Buscar(EdtConsulta.Text);
   ADSPacientes.Close;
-  ADSPacientes.SetSourceList(FController.Buscar(EdtConsulta.Text));
+  ADSPacientes.SetSourceList(FLista);
   ADSPacientes.Open;
 end;
 

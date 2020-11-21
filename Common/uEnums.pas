@@ -3,7 +3,7 @@ unit uEnums;
 interface
 
 uses
-  Aurelius.Mapping.Attributes;
+  Aurelius.Mapping.Attributes, Data.DB;
 
 type
   [Enumeration(TEnumMappingType.emInteger)]
@@ -13,11 +13,25 @@ type
   TProcedimentoTipoHelper = record helper for TProcedimentoTipo
   public
     function ToDescricao: string;
+    class procedure PreencheDataSet(ADataSet: TDataSet); static;
   end;
 
 implementation
 
 { TProcedimentoTipoHelper }
+
+class procedure TProcedimentoTipoHelper.PreencheDataSet(ADataSet: TDataSet);
+var
+  ATipo: TProcedimentoTipo;
+begin
+  for ATipo := Low(TProcedimentoTipo) to High(TProcedimentoTipo) do
+  begin
+    ADataSet.Append;
+    ADataSet.FieldByName('ID').AsInteger       := Integer(ATipo);
+    ADataSet.FieldByName('Descricao').AsString := ATipo.ToDescricao;
+    ADataSet.Post;
+  end;
+end;
 
 function TProcedimentoTipoHelper.ToDescricao: string;
 begin

@@ -3,7 +3,7 @@ unit uBaseController;
 interface
 
 uses
-  Aurelius.Engine.ObjectManager, uServerContext;
+  uServerContext;
 
 type
   TBaseController = class(TInterfacedObject)

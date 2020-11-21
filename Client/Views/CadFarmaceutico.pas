@@ -1,15 +1,15 @@
-unit CadPaciente;
+unit CadFarmaceutico;
 
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,   Vcl.Controls,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics, Vcl.Controls,
   Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxClasses, dxLayoutContainer, dxLayoutControl, cxContainer, cxEdit,
-  cxTextEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, uPacienteController, uEntities, cxLookAndFeels,
+  cxTextEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, uFarmaceuticoController, uEntities, cxLookAndFeels,
   cxLookAndFeelPainters, dxLayoutcxEditAdapters, dxLayoutControlAdapters;
 
 type
-  TFrmCadPaciente = class(TForm)
+  TFrmCadFarmaceutico = class(TForm)
     dxLayoutControl1Group_Root: TdxLayoutGroup;
     dxLayoutControl1: TdxLayoutControl;
     EdtNome: TcxTextEdit;
@@ -35,91 +35,91 @@ type
     procedure BtnExcluirClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
-    FController: TPacienteController;
+    FController: TFarmaceuticoController;
     FOwnsObject: Boolean;
     procedure LoadData;
     procedure Salvar;
   protected
-    FPaciente: TPaciente;
+    FFarmaceutico: TFarmaceutico;
   public
     class procedure Abrir; overload;
-    class procedure Abrir(APaciente: TPaciente); overload;
+    class procedure Abrir(AFarmaceutico: TFarmaceutico); overload;
   end;
 
 implementation
 
 {$R *.dfm}
 
-class procedure TFrmCadPaciente.Abrir(APaciente: TPaciente);
+class procedure TFrmCadFarmaceutico.Abrir(AFarmaceutico: TFarmaceutico);
 var
-  AForm: TFrmCadPaciente;
+  AForm: TFrmCadFarmaceutico;
 begin
-  AForm := TFrmCadPaciente.Create(nil);
-  AForm.FPaciente := APaciente;
+  AForm := TFrmCadFarmaceutico.Create(nil);
+  AForm.FFarmaceutico := AFarmaceutico;
   AForm.Show;
 end;
 
-class procedure TFrmCadPaciente.Abrir;
+class procedure TFrmCadFarmaceutico.Abrir;
 begin
   Abrir(nil);
 end;
 
-procedure TFrmCadPaciente.BtnCancelarClick(Sender: TObject);
+procedure TFrmCadFarmaceutico.BtnCancelarClick(Sender: TObject);
 begin
   Close;
 end;
 
-procedure TFrmCadPaciente.BtnExcluirClick(Sender: TObject);
+procedure TFrmCadFarmaceutico.BtnExcluirClick(Sender: TObject);
 begin
-  FController.Excluir(FPaciente);
+  FController.Excluir(FFarmaceutico);
   Close;
 end;
 
-procedure TFrmCadPaciente.BtnSalvarClick(Sender: TObject);
+procedure TFrmCadFarmaceutico.BtnSalvarClick(Sender: TObject);
 begin
   Salvar;
   Close;
 end;
 
-procedure TFrmCadPaciente.FormClose(Sender: TObject; var Action: TCloseAction);
+procedure TFrmCadFarmaceutico.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
 end;
 
-procedure TFrmCadPaciente.FormCreate(Sender: TObject);
+procedure TFrmCadFarmaceutico.FormCreate(Sender: TObject);
 begin
-  FController := TPacienteController.Create;
+  FController := TFarmaceuticoController.Create;
 end;
 
-procedure TFrmCadPaciente.FormDestroy(Sender: TObject);
+procedure TFrmCadFarmaceutico.FormDestroy(Sender: TObject);
 begin
   FController.Free;
   if FOwnsObject then
-    FPaciente.Free;
+    FFarmaceutico.Free;
 end;
 
-procedure TFrmCadPaciente.FormShow(Sender: TObject);
+procedure TFrmCadFarmaceutico.FormShow(Sender: TObject);
 begin
   LoadData;
 end;
 
-procedure TFrmCadPaciente.Salvar;
+procedure TFrmCadFarmaceutico.Salvar;
 begin
-  FPaciente.Nome := EdtNome.Text;
-  FController.Salvar(FPaciente);
+  FFarmaceutico.Nome := EdtNome.Text;
+  FController.Salvar(FFarmaceutico);
 end;
 
-procedure TFrmCadPaciente.LoadData;
+procedure TFrmCadFarmaceutico.LoadData;
 begin
-  if FPaciente = nil then
+  if FFarmaceutico = nil then
   begin
-    FPaciente := TPaciente.Create;
+    FFarmaceutico := TFarmaceutico.Create;
     FOwnsObject := True;
   end;
-  BtnExcluir.Enabled := FPaciente.Id <> 0;
-  if FPaciente.Id <> 0 then
-    EdtID.EditValue := FPaciente.Id;
-  EdtNome.EditValue := FPaciente.Nome;
+  BtnExcluir.Enabled := FFarmaceutico.Id <> 0;
+  if FFarmaceutico.Id <> 0 then
+    EdtID.EditValue := FFarmaceutico.Id;
+  EdtNome.EditValue := FFarmaceutico.Nome;
 end;
 
 end.

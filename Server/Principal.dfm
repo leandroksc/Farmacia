@@ -24,6 +24,7 @@ object MainForm: TMainForm
     Height = 194
     Anchors = [akLeft, akTop, akRight, akBottom]
     ReadOnly = True
+    ScrollBars = ssVertical
     TabOrder = 0
   end
   object btStart: TButton
@@ -43,5 +44,13 @@ object MainForm: TMainForm
     Caption = 'Stop'
     TabOrder = 2
     OnClick = btStopClick
+  end
+  object BtnUpdateDataBase: TButton
+    Left = 171
+    Top = 8
+    Width = 126
+    Height = 25
+    Caption = 'Update DataBase'
+    TabOrder = 3
   end
 end

@@ -1,7 +1,7 @@
-object FrmCadPaciente: TFrmCadPaciente
+object FrmCadFarmaceutico: TFrmCadFarmaceutico
   Left = 0
   Top = 0
-  Caption = 'Cadastro de Paciente'
+  Caption = 'Cadastro de Farmac'#195#170'utico'
   ClientHeight = 288
   ClientWidth = 636
   Color = clBtnFace

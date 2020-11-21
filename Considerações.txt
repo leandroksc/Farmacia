@@ -1,0 +1,8 @@
+Melhorias e correções que ainda estão pendentes:
+
+- Alguns objetos ainda estão com vazamento de memória.
+- Melhorar a validação de dados, retornando códigos de erros específicos para que a view possa ter melhor interatividade e feedback ao usuário.
+- Melhorar o gerenciamento de exceções, tanto em exclusões como em validações de dados.
+- Implementar auto-refresh nas consultas após alterações dos dados (observers).
+- Otimizar os acessos ao webservice para retornar todos os dados necessários em apenas uma requisição.
+- Melhorar a UI.

@@ -1,22 +1,24 @@
-unit Unit2;
+unit Principal;
 
 interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-  Vcl.StdCtrls, Unit1;
+  Vcl.StdCtrls, uDMServerContainer;
 
 type
   TMainForm = class(TForm)
     mmInfo: TMemo;
     btStart: TButton;
     btStop: TButton;
+    BtnUpdateDataBase: TButton;
     procedure btStartClick(ASender: TObject);
     procedure btStopClick(ASender: TObject);
     procedure FormCreate(ASender: TObject);
   strict private
     procedure UpdateGUI;
+    procedure SQLOnExecute(Sender: TObject; const ASQL: string);
   end;
 
 var
@@ -46,7 +48,14 @@ end;
 
 procedure TMainForm.FormCreate(ASender: TObject);
 begin
+  ServerContainer.OnSQLExecute := SQLOnExecute;
   UpdateGUI;
+end;
+
+procedure TMainForm.SQLOnExecute(Sender: TObject; const ASQL: string);
+begin
+  mmInfo.Lines.Add('--------------------------');
+  mmInfo.Lines.Add(ASQL);
 end;
 
 procedure TMainForm.UpdateGUI;

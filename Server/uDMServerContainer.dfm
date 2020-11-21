@@ -1,5 +1,7 @@
 object ServerContainer: TServerContainer
   OldCreateOrder = False
+  OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
   Height = 406
   Width = 680
   object SparkleHttpSysDispatcher: TSparkleHttpSysDispatcher
@@ -17,9 +19,19 @@ object ServerContainer: TServerContainer
         Permissions = [List, Get, Insert, Modify, Delete]
       end
       item
-        EntitySetName = 'Pessoa'
+        EntitySetName = 'Paciente'
+        Permissions = [List, Get, Insert, Modify, Delete]
+      end
+      item
+        EntitySetName = 'Farmaceutico'
+        Permissions = [List, Get, Insert, Modify, Delete]
+      end
+      item
+        EntitySetName = 'Procedimento'
         Permissions = [List, Get, Insert, Modify, Delete]
       end>
+    OnEntityInserting = XDataServerEntityInserting
+    OnEntityModifying = XDataServerEntityModifying
     Left = 216
     Top = 16
   end
@@ -30,12 +42,12 @@ object ServerContainer: TServerContainer
   end
   object AureliusConnection: TAureliusConnection
     AdapterName = 'FireDac'
-    AdaptedConnection = FDConnection2
+    AdaptedConnection = Banco
     SQLDialect = 'MySQL'
     Left = 216
-    Top = 128
+    Top = 136
   end
-  object FDConnection2: TFDConnection
+  object Banco: TFDConnection
     Params.Strings = (
       'Database=banco'
       'User_Name=root'
@@ -43,7 +55,12 @@ object ServerContainer: TServerContainer
       'DriverID=MySQL')
     Connected = True
     LoginPrompt = False
+    Left = 216
+    Top = 192
+  end
+  object AureliusModelEvents1: TAureliusModelEvents
+    OnSQLExecuting = AureliusModelEvents1SQLExecuting
     Left = 304
-    Top = 216
+    Top = 16
   end
 end

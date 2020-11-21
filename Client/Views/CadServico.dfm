@@ -1,8 +1,8 @@
 object FrmCadServico: TFrmCadServico
   Left = 0
   Top = 0
-  Caption = 'Cadastro de Paciente'
-  ClientHeight = 661
+  Caption = 'Cadastro de Servi'#231'o'
+  ClientHeight = 535
   ClientWidth = 840
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object FrmCadServico: TFrmCadServico
     Left = 0
     Top = 0
     Width = 840
-    Height = 661
+    Height = 535
     Align = alClient
     TabOrder = 0
     object EdtID: TcxTextEdit
@@ -38,21 +38,21 @@ object FrmCadServico: TFrmCadServico
       Width = 121
     end
     object BtnSalvar: TcxButton
-      Left = 584
-      Top = 626
+      Left = 442
+      Top = 500
       Width = 120
       Height = 25
       Caption = 'Salvar'
-      TabOrder = 9
+      TabOrder = 10
       OnClick = BtnSalvarClick
     end
     object BtnCancelar: TcxButton
       Left = 710
-      Top = 626
+      Top = 500
       Width = 120
       Height = 25
       Caption = 'Cancelar'
-      TabOrder = 10
+      TabOrder = 12
       OnClick = BtnCancelarClick
     end
     object cxLabel1: TcxLabel
@@ -110,10 +110,15 @@ object FrmCadServico: TFrmCadServico
       Left = 477
       Top = 68
       AutoSize = False
-      Properties.ListColumns = <>
+      Properties.KeyFieldNames = 'ID'
+      Properties.ListColumns = <
+        item
+          FieldName = 'Nome'
+        end>
       Properties.ListOptions.GridLines = glNone
       Properties.ListOptions.ShowHeader = False
       Properties.ListOptions.SyncMode = True
+      Properties.ListSource = DSFarmaceuticos
       Style.BorderColor = clWindowFrame
       Style.BorderStyle = ebs3D
       Style.HotTrack = False
@@ -128,8 +133,8 @@ object FrmCadServico: TFrmCadServico
       Left = 10
       Top = 257
       Width = 820
-      Height = 320
-      TabOrder = 7
+      Height = 194
+      TabOrder = 8
       object cxGrid1DBTableView1: TcxGridDBTableView
         Navigator.Buttons.CustomButtons = <>
         Navigator.Buttons.First.Visible = False
@@ -152,6 +157,7 @@ object FrmCadServico: TFrmCadServico
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
+        OptionsView.GroupByBox = False
         object cxGrid1DBTableView1Column2: TcxGridDBColumn
           DataBinding.FieldName = 'Tipo'
           PropertiesClassName = 'TcxLookupComboBoxProperties'
@@ -163,7 +169,7 @@ object FrmCadServico: TFrmCadServico
           Properties.ListOptions.GridLines = glNone
           Properties.ListOptions.ShowHeader = False
           Properties.ListSource = DSMemProcedimentoTipos
-          Width = 175
+          Width = 273
         end
         object cxGrid1DBTableView1Column1: TcxGridDBColumn
           Caption = 'Descri'#231#227'o'
@@ -173,7 +179,7 @@ object FrmCadServico: TFrmCadServico
         object cxGrid1DBTableView1Column3: TcxGridDBColumn
           DataBinding.FieldName = 'Valor'
           PropertiesClassName = 'TcxCurrencyEditProperties'
-          Width = 161
+          Width = 92
         end
       end
       object cxGrid1Level1: TcxGridLevel
@@ -193,7 +199,7 @@ object FrmCadServico: TFrmCadServico
     end
     object LblTotal: TcxLabel
       Left = 688
-      Top = 583
+      Top = 457
       AutoSize = False
       Caption = 'LblTotal'
       ParentFont = False
@@ -218,12 +224,30 @@ object FrmCadServico: TFrmCadServico
       TabOrder = 6
       OnClick = BtnNovoProcedimentoClick
     end
+    object BtnExcluirProcedimento: TcxButton
+      Left = 151
+      Top = 208
+      Width = 130
+      Height = 25
+      Caption = 'Excluir Procedimento'
+      TabOrder = 7
+      OnClick = BtnExcluirProcedimentoClick
+    end
+    object BtnExcluir: TcxButton
+      Left = 568
+      Top = 500
+      Width = 136
+      Height = 25
+      Caption = 'Excluir'
+      TabOrder = 11
+      OnClick = BtnExcluirClick
+    end
     object dxLayoutControl1Group_Root: TdxLayoutGroup
       AlignHorz = ahClient
       AlignVert = avClient
       ButtonOptions.Buttons = <>
       Hidden = True
-      ItemIndex = 1
+      ItemIndex = 3
       ShowBorder = False
       Index = -1
     end
@@ -255,7 +279,7 @@ object FrmCadServico: TFrmCadServico
       ControlOptions.OriginalHeight = 25
       ControlOptions.OriginalWidth = 120
       ControlOptions.ShowBorder = False
-      Index = 1
+      Index = 2
     end
     object dxLayoutGroup1: TdxLayoutGroup
       Parent = dxLayoutControl1Group_Root
@@ -290,6 +314,7 @@ object FrmCadServico: TFrmCadServico
       AlignVert = avClient
       CaptionOptions.Text = 'New Group'
       ButtonOptions.Buttons = <>
+      ItemIndex = 3
       ShowBorder = False
       Index = 1
     end
@@ -368,7 +393,7 @@ object FrmCadServico: TFrmCadServico
       Index = 0
     end
     object dxLayoutItem8: TdxLayoutItem
-      Parent = GrupoContent
+      Parent = dxLayoutAutoCreatedGroup3
       AlignHorz = ahLeft
       CaptionOptions.Text = 'cxButton1'
       CaptionOptions.Visible = False
@@ -376,16 +401,43 @@ object FrmCadServico: TFrmCadServico
       ControlOptions.OriginalHeight = 25
       ControlOptions.OriginalWidth = 135
       ControlOptions.ShowBorder = False
+      Index = 0
+    end
+    object dxLayoutItem9: TdxLayoutItem
+      Parent = dxLayoutAutoCreatedGroup3
+      AlignVert = avBottom
+      CaptionOptions.Visible = False
+      Control = BtnExcluirProcedimento
+      ControlOptions.OriginalHeight = 25
+      ControlOptions.OriginalWidth = 130
+      ControlOptions.ShowBorder = False
+      Index = 1
+    end
+    object dxLayoutAutoCreatedGroup3: TdxLayoutAutoCreatedGroup
+      Parent = GrupoContent
+      LayoutDirection = ldHorizontal
       Index = 3
+    end
+    object dxLayoutItem10: TdxLayoutItem
+      Parent = dxLayoutGroup1
+      AlignVert = avClient
+      CaptionOptions.Visible = False
+      Control = BtnExcluir
+      ControlOptions.OriginalHeight = 25
+      ControlOptions.OriginalWidth = 136
+      ControlOptions.ShowBorder = False
+      Index = 1
     end
   end
   object ADSPacientes: TAureliusDataset
     FieldDefs = <>
+    ReadOnly = True
     Left = 448
     Top = 160
   end
   object ADSFarmaceuticos: TAureliusDataset
     FieldDefs = <>
+    ReadOnly = True
     Left = 528
     Top = 160
   end
@@ -400,9 +452,9 @@ object FrmCadServico: TFrmCadServico
     Top = 224
   end
   object DSProcedimentos: TDataSource
-    DataSet = MemProcedimentos
-    Left = 528
-    Top = 408
+    DataSet = ADSProcedimentos
+    Left = 184
+    Top = 360
   end
   object MemProcedimentoTipos: TFDMemTable
     FetchOptions.AssignedValues = [evMode]
@@ -412,8 +464,8 @@ object FrmCadServico: TFrmCadServico
     UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
-    Left = 704
-    Top = 320
+    Left = 728
+    Top = 120
     object MemProcedimentoTiposID: TIntegerField
       FieldName = 'ID'
     end
@@ -424,42 +476,14 @@ object FrmCadServico: TFrmCadServico
   end
   object DSMemProcedimentoTipos: TDataSource
     DataSet = MemProcedimentoTipos
-    Left = 704
-    Top = 376
+    Left = 728
+    Top = 176
   end
-  object MemProcedimentos: TFDMemTable
-    FetchOptions.AssignedValues = [evMode]
-    FetchOptions.Mode = fmAll
-    ResourceOptions.AssignedValues = [rvSilentMode]
-    ResourceOptions.SilentMode = True
-    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
-    UpdateOptions.CheckRequired = False
-    UpdateOptions.AutoCommitUpdates = True
-    Left = 528
-    Top = 352
-    object MemProcedimentosID: TIntegerField
-      FieldName = 'ID'
-    end
-    object MemProcedimentosDescricao: TStringField
-      FieldName = 'Descricao'
-      Size = 255
-    end
-    object MemProcedimentosTipo: TIntegerField
-      FieldName = 'Tipo'
-    end
-    object MemProcedimentosValor: TCurrencyField
-      FieldName = 'Valor'
-    end
-  end
-  object MemPacientes: TFDMemTable
-    FetchOptions.AssignedValues = [evMode]
-    FetchOptions.Mode = fmAll
-    ResourceOptions.AssignedValues = [rvSilentMode]
-    ResourceOptions.SilentMode = True
-    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
-    UpdateOptions.CheckRequired = False
-    UpdateOptions.AutoCommitUpdates = True
-    Left = 368
-    Top = 160
+  object ADSProcedimentos: TAureliusDataset
+    FieldDefs = <>
+    AfterPost = ADSProcedimentosAfterPost
+    AfterDelete = ADSProcedimentosAfterDelete
+    Left = 184
+    Top = 304
   end
 end

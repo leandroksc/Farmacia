@@ -3,17 +3,30 @@ unit uEntities;
 interface
 
 uses
-  Aurelius.Mapping.Attributes, uEnums, Generics.Collections, Aurelius.Types.Proxy, Aurelius.Types.Nullable;
+  Aurelius.Mapping.Attributes, uEnums, Generics.Collections, Aurelius.Types.Proxy, Aurelius.Types.Nullable, 
+  System.SysUtils, uInterfaces;
 
 type
   [Entity, Automapping]
-  TPessoa = class
+  TPaciente = class(TInterfacedObject, IValidable)
   private
     FId: Integer;
     FNome: string;
   public
     property Id: Integer read FId write FId;
     property Nome: string read FNome write FNome;
+    procedure Validar;
+  end;
+
+  [Entity, Automapping]
+  TFarmaceutico = class(TInterfacedObject, IValidable)
+  private
+    FId: Integer;
+    FNome: string;
+  public
+    property Id: Integer read FId write FId;
+    property Nome: string read FNome write FNome;
+    procedure Validar;
   end;
 
   [Entity, Automapping]
@@ -31,36 +44,27 @@ type
   end;
 
   [Entity, Automapping]
-  TServico = class
+  TServico = class(TInterfacedObject, IValidable)
   private
     FData: TDateTime;
-
-    [Association([TAssociationProp.Required])]
-    [JoinColumn('FARMACEUTICO_ID')]
-    FFarmaceutico: TPessoa;
-
-    [Association([], CascadeTypeAllButRemove)]
-    [JoinColumn('PACIENTE_ID')]
-    FPaciente: TPessoa;
     FObservacao: Nullable<string>;
-
-    [ManyValuedAssociation([TAssociationProp.Required], CascadeTypeAllRemoveOrphan)]
+    FFarmaceutico: TFarmaceutico;
+    FPaciente: TPaciente;
     FProcedimentos: Proxy<TList<TProcedimento>>;
     FID: Integer;
-    FPaciente_ID: Integer;
     function GetTotal: Currency;
     function GetProcedimentos: TList<TProcedimento>;
   public
     property ID: Integer read FID write FID;
     property Data: TDateTime read FData write FData;
-    property Farmaceutico: TPessoa read FFarmaceutico write FFarmaceutico;
-    property Paciente: TPessoa read FPaciente write FPaciente;
-
-//    [Column('PACIENTE_ID')]
-//    property Paciente_ID: Integer read FPaciente_ID write FPaciente_ID;
-    property Observacao: Nullable<string> read FObservacao write FObservacao;
-    property Procedimentos: TList<TProcedimento> read GetProcedimentos;
     property Total: Currency read GetTotal;
+    property Observacao: Nullable<string> read FObservacao write FObservacao;
+    property Farmaceutico: TFarmaceutico read FFarmaceutico write FFarmaceutico;
+    property Paciente: TPaciente read FPaciente write FPaciente;
+    [ManyValuedAssociation([TAssociationProp.Required], CascadeTypeAllRemoveOrphan)]
+    property Procedimentos: TList<TProcedimento> read GetProcedimentos;
+
+    procedure Validar;
 
     constructor Create;
     destructor Destroy; override;
@@ -95,9 +99,39 @@ begin
     Result := Result + AProc.Valor;
 end;
 
+procedure TServico.Validar;
+begin
+  if FData <= 0 then
+    raise Exception.Create('Data Inválida. Preencha uma Data');
+  if (FPaciente = nil) or (FPaciente.Id = 0) then
+    raise Exception.Create('Paciente não informado ou inválido');
+  if (FFarmaceutico = nil) or (FFarmaceutico.Id = 0) then
+    raise Exception.Create('Farmacêutico não informado ou inválido');
+  if FProcedimentos.Value.Count = 0 then
+    raise Exception.Create('Nenhum procedimento informado. Defina pelo menos 1 procedimento');
+end;
+
+{ TPaciente }
+
+procedure TPaciente.Validar;
+begin
+  if FNome = '' then
+    raise Exception.Create('Nome não informado');
+end;
+
+{ TFarmaceutico }
+
+procedure TFarmaceutico.Validar;
+begin
+  if FNome = '' then
+    raise Exception.Create('Nome não informado');
+end;
+
 initialization
   RegisterEntity(TServico);
   RegisterEntity(TProcedimento);
-  RegisterEntity(TPessoa);
+  RegisterEntity(TPaciente);
+  RegisterEntity(TFarmaceutico);
 
 end.
+
